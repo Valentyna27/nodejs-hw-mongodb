@@ -25,7 +25,7 @@ export const createContactSchema = Joi.object({
     }),
 });
 
-export const updateStudentSchema = Joi.object({
+export const updateContactSchema = Joi.object({
   name: Joi.string().min(3).max(20).messages({
     'string.base': 'Name must be a string',
     'string.min': 'Name must have at least 3 characters',
