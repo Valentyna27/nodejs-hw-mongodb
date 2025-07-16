@@ -66,7 +66,7 @@ export const refreshUserSessionController = async (req, res) => {
 };
 
 export const logOutUserController = async (req, res) => {
-  if (!req.cookies.sessionId) {
+  if (req.cookies.sessionId) {
     await logOutUser(req.cookies.sessionId);
   }
 
