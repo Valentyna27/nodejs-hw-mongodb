@@ -6,6 +6,9 @@ import { deleteContact } from '../services/contacts.js';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
+import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
+import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
+import { getEnvVar } from '../utils/getEnvVar.js';
 
 export const getContactsController = async (req, res, next) => {
   const { page, perPage } = parsePaginationParams(req.query);
@@ -52,8 +55,23 @@ export const getContactByIdController = async (req, res, next) => {
 
 export const createContactController = async (req, res) => {
   const { name, phoneNumber, email, isFavourite, contactType } = req.body;
-
   const userId = req.user._id;
+  const photo = req.file;
+
+  if (!name || !phoneNumber || !contactType) {
+    throw createHttpError(
+      'Not valid request! Please provide name, phoneNumber, and contactType.'
+    );
+  }
+
+  let photoUrl;
+  if (photo) {
+    if (getEnvVar('ENABLE_CLOUDINARY') === 'true') {
+      photoUrl = await saveFileToCloudinary(photo);
+    } else {
+      photoUrl = await saveFileToUploadDir(photo);
+    }
+  }
 
   const contact = await createContact({
     name,
@@ -62,13 +80,8 @@ export const createContactController = async (req, res) => {
     isFavourite: isFavourite ?? false,
     contactType,
     userId,
+    photo: photoUrl,
   });
-
-  if (!name || !phoneNumber || !contactType) {
-    throw createHttpError(
-      'Not valid request! Please provide name, phoneNumber, and contactType.'
-    );
-  }
 
   res.status(201).json({
     status: 201,
@@ -79,19 +92,32 @@ export const createContactController = async (req, res) => {
 
 export const patchContactController = async (req, res, next) => {
   const { contactId } = req.params;
-
+  const photo = req.file;
   const userId = req.user._id;
 
-  const updatedContact = await updateContact(contactId, userId, req.body);
+  let photoUrl;
+  if (photo) {
+    if (getEnvVar('ENABLE_CLOUDINARY') === 'true') {
+      photoUrl = await saveFileToCloudinary(photo);
+    } else {
+      photoUrl = await saveFileToUploadDir(photo);
+    }
+  }
 
-  if (!updatedContact) {
-    throw createHttpError(404, 'Contact not found');
+  const result = await updateContact(contactId, userId, {
+    ...req.body,
+    photo: photoUrl,
+  });
+
+  if (!result) {
+    next(createHttpError(404, 'Contact not found'));
+    return;
   }
 
   res.json({
     status: 200,
     message: `Successfully patched a contact!`,
-    data: updatedContact,
+    data: result,
   });
 };
 
