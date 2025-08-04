@@ -3,6 +3,8 @@ tags:
 summary: Refresh session
 operationId: refreshSession
 description: Refresh session using cookies
+security:
+  - bearerAuth: []
 responses:
   '200':
     description: Session refreshed

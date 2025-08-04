@@ -3,6 +3,7 @@ tags:
 summary: Log in a user
 operationId: loginUser
 description: Authenticate user
+security: []
 requestBody:
   required: true
   content:

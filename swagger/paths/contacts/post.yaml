@@ -32,10 +32,6 @@ requestBody:
             description: Contact's photo
             type: string
             format: binary
-          userId:
-            description: ID of the user who owns the contact
-            type: string
-            example: '1234567890abcdef12345678'
 responses:
   '201':
     description: Creates a contact
