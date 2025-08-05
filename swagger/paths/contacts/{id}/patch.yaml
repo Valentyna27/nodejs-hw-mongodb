@@ -16,9 +16,34 @@ parameters:
 requestBody:
   required: true
   content:
-    application/json:
+    multipart/form-data:
       schema:
-        $ref: '../../../components/schemas/contact.yaml'
+        type: object
+        properties:
+          name:
+            type: string
+            description: Updated contact name
+            example: 'Anna Kovalenkoo'
+          phoneNumber:
+            description: Contact's phone number
+            type: string
+            example: '+380000000006'
+          contactType:
+            type: string
+            description: Updated contact type
+            enum: [work, home, personal]
+          email:
+            type: string
+            description: Updated contact email
+            example: 'anna.kovalenko@gmail.com'
+          isFavourite:
+            type: boolean
+            description: Updated favourite status
+            example: false
+          photo:
+            type: string
+            format: binary
+            description: Updated contact photo
 responses:
   '200':
     description: Contact updated successfully

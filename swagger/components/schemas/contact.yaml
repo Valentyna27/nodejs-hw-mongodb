@@ -21,11 +21,15 @@ properties:
     description: "Type of contact's phone number"
     type: string
     enum: ['work', 'home', 'personal']
+  email:
+    description: "Contact's email"
+    type: string
+    example: 'anna.kovalenko@gmail.com'
   photo:
     description: "Link to contact's photo"
     type: string
     example: https://res.cloudinary.com/uqwgdu/image/upload/image.png
-  userId:
-    description: User's id
-    type: string
-    example: '65e4decdd286b30065d54af9'
+  isFavourite:
+    description: Contact marked as favourite or not
+    type: boolean
+    example: true

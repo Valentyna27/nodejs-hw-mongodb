@@ -2,7 +2,8 @@ tags:
   - Contacts
 summary: Get list of contacts
 operationId: getContacts
-description: 'Get list of users with this endpoint'
+description:
+  'Get list of contacts with pagination, sorting and filtering options'
 security:
   - bearerAuth: []
 parameters:
@@ -36,17 +37,11 @@ parameters:
       enum: [work, home, personal]
       example: home
   - in: query
-    name: name
+    name: isFavourite
     schema:
-      type: string
-      example: 'Anna'
-  - in: query
-    name: phoneNumber
-    schema:
-      type: string
-      example: '+380123456789'
-    description:
-      'Get list of contacts with pagination, sorting and filtering options'
+      type: boolean
+      example: true
+    description: Filter contacts marked as favourite
 responses:
   '200':
     description: Successfully found contacts!

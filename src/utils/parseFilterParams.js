@@ -1,7 +1,7 @@
 const parseType = type => {
   const isString = typeof type === 'string';
   if (!isString) return;
-  const existingTypes = type => ['home', 'personal'].includes(type);
+  const existingTypes = type => ['work', 'home', 'personal'].includes(type);
 
   if (existingTypes(type)) return type;
 };
